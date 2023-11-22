@@ -31,6 +31,7 @@ func loadIdea(title string) (*Idea, error) {
 	}
 	return &Idea{Title: title, Description: description}, err
 }
+
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
 	i, err := loadIdea(title)
@@ -42,16 +43,16 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	//	i := Idea{
-	//		ID:          "1",
-	//		Title:       "My Idea",
-	//		Description: []byte("This is my idea"),
-	//		CreatedAt:   time.Now(),
-	//	}
-	//
-	// i.save()
-	// i2, _ := loadIdea("My Idea")
-	// println(string(i2.Description))
+	i := Idea{
+		ID:          "1",
+		Title:       "My Second Idea",
+		Description: []byte("This is my second idea ever"),
+		CreatedAt:   time.Now(),
+	}
+
+	i.save()
+	i2, _ := loadIdea("My Idea")
+	println(string(i2.Description))
 	http.HandleFunc("/view/", viewHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
