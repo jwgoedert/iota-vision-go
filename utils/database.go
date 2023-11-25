@@ -13,9 +13,9 @@ import (
 const (
 	host     = "localhost"
 	port     = 5432
-	user     = "username"
-	password = "password"
-	dbname   = "postgres"
+	user     = "postgres"
+	password = "postgres"
+	dbname   = "iota_vision_db"
 )
 
 func GetConnection() *sqlx.DB {
@@ -31,4 +31,43 @@ func GetConnection() *sqlx.DB {
 
 	log.Println("DB Connection established...")
 	return db
+}
+
+func CreateTablesIfNotExist() {
+	db := GetConnection()
+	defer db.Close()
+
+	// Create Post table for initial testing
+	// Create table
+	createTableQuery := `
+	CREATE TABLE IF NOT EXISTS public.posts (
+		id SERIAL PRIMARY KEY,
+		title TEXT COLLATE pg_catalog."default",
+		body TEXT COLLATE pg_catalog."default"
+	) WITH (
+		OIDS = FALSE
+	) TABLESPACE pg_default;
+`
+	_, err := db.Exec(createTableQuery)
+	if err != nil {
+		// Handle error
+	}
+
+	// Alter table ownership
+	alterTableQuery := `ALTER TABLE IF EXISTS public.posts OWNER TO postgres;`
+	_, err = db.Exec(alterTableQuery)
+	if err != nil {
+		// Handle error
+	}
+
+	// Add table comment
+	commentQuery := `COMMENT ON TABLE public.posts IS 'Create Posts Table for Tests';`
+	_, err = db.Exec(commentQuery)
+	if err != nil {
+		// Handle error
+	}
+
+}
+func CreatePostTable() {
+
 }
